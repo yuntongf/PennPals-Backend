@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {replySchema} = require('./reply');
 
 const Message = mongoose.model(
   "Message",
@@ -24,6 +25,9 @@ const Message = mongoose.model(
     reported : {
       type : Number,
       default : 0
+    },
+    replies : {
+      type:[replySchema]
     }
   })
 );

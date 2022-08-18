@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const Reply= mongoose.model(
-  "Reply",
+const replySchema = 
   new mongoose.Schema({
     author: {
       type: String,
+      default:'Anonymous',
       trim:true
     },
     content: {
@@ -22,9 +22,9 @@ const Reply= mongoose.model(
       type : Number,
       default : 0
     }
-  })
-);
+  });
 
+const Reply = mongoose.model('Reply', replySchema);
 exports.Reply = Reply;
-
+exports.replySchema = replySchema;
 

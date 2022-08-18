@@ -11,8 +11,8 @@ app.use(cors());
 var jsonParser = bodyParser.json();
 
 
-app.post("/", jsonParser, async (req, res) => {
-  //console.log(req.body);
+app.post("/MessageBoard/Compose", jsonParser, async (req, res) => {
+  console.log(req.body);
   const message = new Message({
     author: req.body.author,
     title: req.body.title,
@@ -54,7 +54,8 @@ app.get("/MessageBoard", jsonParser, async (req, res) => {
 });
 
 app.put("/MessageBoard/Message/:id", jsonParser, async (req, res) => {
-  const messages = await Message.findByIdAndUpdate(
+  console.log(req.body.replies);
+  let messages = await Message.findByIdAndUpdate(
     req.params['id'],
     { 
       title: req.body.title,
@@ -62,7 +63,8 @@ app.put("/MessageBoard/Message/:id", jsonParser, async (req, res) => {
       author: req.body.author,
       content: req.body.content,
       edited: req.body.edited,
-      reported: req.body.reported
+      reported: req.body.reported,
+      replies: req.body.replies
       })
   res.send(messages);
 });
