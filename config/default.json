@@ -1,0 +1,5 @@
+{
+  "db": "mongodb://localhost/ambb",
+  "port": "3500",
+  "requiresAuth": false
+}
