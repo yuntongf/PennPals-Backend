@@ -88,7 +88,7 @@ app.delete("/MessageBoard/Message/:id", jsonParser, async (req, res) => {
 require("./startup/db")();
 //require("./startup/config")();
 
-const port = process.env.AMB_DB || config.get("port");
+const port = process.env.PORT || config.get("port");
 const server = app.listen(port, () =>
   console.log(`Listening on port ${port}...`)
 );
