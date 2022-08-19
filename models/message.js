@@ -28,6 +28,10 @@ const Message = mongoose.model(
     },
     replies : {
       type:[replySchema]
+    },
+    edited : {
+      type:Boolean,
+      default:false
     }
   })
 );

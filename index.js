@@ -18,7 +18,9 @@ app.post("/MessageBoard/Compose", jsonParser, async (req, res) => {
     title: req.body.title,
     content: req.body.content,
     likes: 0,
-    reported: false
+    reported: 0,
+    deleted: false,
+    replies: req.body.replies
   });
   const messageback = await message.save();
   console.log(messageback);
