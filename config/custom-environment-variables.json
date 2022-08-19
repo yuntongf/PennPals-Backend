@@ -1,4 +1,3 @@
 {
-   "db": "AMB_DB",
-   "requiresAuth": false
+   "db": "AMB_DB"
 }
