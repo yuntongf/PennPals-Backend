@@ -1,8 +1,11 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const config = require("config");
 var bodyParser = require('body-parser');
 const app = express();
+const auth = require("./middleware/auth")
 const {Message} = require("./models/message");
+const {User} = require("./models/user");
 var jsonParser = bodyParser.json();
 require("./setup/cors")(app);
 require("./setup/db")();
@@ -12,13 +15,36 @@ app.get("/", jsonParser, async (req, res) => {
   res.send(messages);
 });
 
+app.post("/Register", jsonParser, async (req, res) => {
+  let user = await User.findOne({username:req.body.username});
+  if (user) return res.status(400).send("Username already exists")
+  user = new User({
+    username : req.body.username,
+    password : req.body.password
+  });
+  await user.save();
+  const token = jwt.sign({_id:user._id, username:user.username}, "jwtPrivateKey");
+  res
+  .header('x-token', token)
+  .header("access-control-expose-headers", "x-token")
+  .send(user);
+})
+
+app.post("/Login", jsonParser, async (req, res) => {
+  let user = await User.findOne({username:req.body.username});
+  if (!user) return res.status(400).send("Invalid username or password.")
+  if (user.password !== req.body.password) return res.status(400).send("Invalid username or password.")
+  
+  const token = jwt.sign({_id:user._id, username:user.username}, "jwtPrivateKey");
+  res.send(token);
+})
+
 app.get("/MessageBoard", jsonParser, async (req, res) => {
   const messages = await Message.find();
   res.send(messages);
 });
 
-app.post("/MessageBoard/Compose", jsonParser, async (req, res) => {
-  console.log(req.body);
+app.post("/MessageBoard/Compose",  jsonParser, async (req, res) => {
   const message = new Message({
     author: req.body.author,
     title: req.body.title,
@@ -29,12 +55,16 @@ app.post("/MessageBoard/Compose", jsonParser, async (req, res) => {
     replies: req.body.replies
   });
   const messageback = await message.save();
-  console.log(messageback);
   res.send(messageback);
 });
 
+app.get("/MessageBoard/Message/:id",  jsonParser, async (req, res) => {
+  const id = req.params['id']
+  const message = await Message.findById(id);
+  res.send(message);
+});
+
 app.put("/MessageBoard/Message/:id", jsonParser, async (req, res) => {
-  console.log(req.body.replies);
   let messages = await Message.findByIdAndUpdate(
     req.params['id'],
     { 
