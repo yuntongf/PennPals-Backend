@@ -32,6 +32,9 @@ const Message = mongoose.model(
     edited : {
       type:Boolean,
       default:false
+    },
+    date : {
+      type:String
     }
   })
 );
