@@ -8,6 +8,10 @@ const userSchema =
     },
     password: {
       type: String
+    },
+    liked:  {
+      type: [String],
+      default: []
     }
   });
 
